@@ -1,0 +1,10 @@
+pandas
+python-dateutil
+google-api-core
+google-api-python-client
+google-auth
+google-auth-httplib2
+google-auth-oauthlib
+googleapis-common-protos
+pillow
+git+https://github.com/GregDMeyer/IT8951.git
