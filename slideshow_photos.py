@@ -2,6 +2,8 @@ from IT8951 import constants
 from IT8951.display import AutoEPDDisplay
 from PIL import Image
 
+TO_SCREEN_PHOTOS_PATH="/home/pi/photos/to_screen"
+
 
 def get_display():
     print('Initializing EPD...')
@@ -15,13 +17,12 @@ def push(img_path, display):
     print('Displaying "{}"...'.format(img_path))
 
     # clearing image to white
-    display.frame_buf.paste(0xFF, box=(0, 0, display.width, display.height))
+    # display.frame_buf.paste(0xFF, box=(0, 0, display.width, display.height))
 
     img = Image.open(img_path)
 
     dims = (display.width, display.height)
 
-    # img.thumbnail(dims)
     paste_coords = [dims[i] - img.size[i] for i in (0,1)]  # align image with bottom of display
     display.frame_buf.paste(img, paste_coords)
 
@@ -41,19 +42,14 @@ def clear_display(display):
     print('Clearing display...')
     display.clear()
 
-import os
 import glob
 import time
 import itertools
 
-# path = "/home/pi/img_convert/tmp/3ff.bmp"
-# os.system("sudo /home/pi/photo-frame/epd {}".format(path))
-
 disp = get_display()
 print_system_info(disp)
 
-images = glob.glob("/home/pi/Photos/to_screen_converted/*.bmp")
+images = glob.glob(TO_SCREEN_PHOTOS_PATH + "/*.bmp")
 for image in itertools.cycle(images):
-    print("Showing {} ...".format(image))
     push(image, disp)
-    time.sleep(60) 
+    time.sleep(6) 

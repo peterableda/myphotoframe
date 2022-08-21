@@ -6,56 +6,8 @@ from PIL import ImageOps
 from PIL import GifImagePlugin
 from PIL import ImageSequence
 import numpy as np
-import glob
 from pathlib import Path
 
-
-def resize(pil_img):
-    # we need 1448×1072
-    resize_height = 1072
-    img_width, img_height = pil_img.size
-
-    hpercent = (resize_height/float(img_height))
-    wsize = int((float(img_width)*float(hpercent)))
-    n_img = pil_img.resize((wsize,resize_height), PIL.Image.ANTIALIAS)
-    return n_img
-
-def crop(pil_img):
-    # we need 1448×1072
-    crop_width = 1448
-    crop_height = 1072
-    img_width, img_height = pil_img.size
-    return pil_img.crop(((img_width - crop_width) // 2,
-                         (img_height - crop_height) // 2,
-                         (img_width + crop_width) // 2,
-                         (img_height + crop_height) // 2))
-
-def convert(pil_img):
-    ary = np.array(pil_img)
-
-    # Split the three channels
-    r,g,b = np.split(ary,3,axis=2)
-    r=r.reshape(-1)
-    g=r.reshape(-1)
-    b=r.reshape(-1)
-
-    # Standard RGB to grayscale 
-    bitmap = 0.299 * r + 0.587 * g + 0.114 * b
-    bitmap = np.array(bitmap).reshape([ary.shape[0], ary.shape[1]])
-    return Image.fromarray(bitmap.astype(np.uint8))
-
-# grayscale quality is so much better than the convert
-def grayscale(pil_img):
-    return pil_img.convert(mode='P', colors=16)
-
-def is_grey_scale(pil_img):
-    w, h = pil_img.size
-    for i in range(0, w, 20): # sampling only every 20th pixel
-        for j in range(0, h, 10):
-            r, g, b = pil_img.getpixel((i,j))
-            if r != g != b: 
-                return False
-    return True
 
 ## From https://gist.github.com/BigglesZX/4016539
 ## with some tweeks
@@ -125,7 +77,6 @@ def processGif(path):
         # last_frame = new_frame
 
 
-
 # gif = Image.open('/home/pi/Photos/Adelinei&Peter full-338-ANIMATION.gif')
 # print(gif.size)
 # print(gif.is_animated)
@@ -138,21 +89,3 @@ def processGif(path):
 #     gif.seek(n)
 #     # im = ImageOps.grayscale(crop(resize(gif)))
 #     gif.save("/home/pi/Photos/tmp/gif_{}.png".format(n))
-
-
-
-images = glob.glob("/home/pi/Photos/to_screen/*.jpg")
-for image in images:
-    print("Converting {} ...".format(image))
-    filename = Path(image).stem
-    with open(image, 'rb') as file:
-        img = Image.open(file)
-        im = grayscale(crop(resize(img)))
-        im.save("/home/pi/Photos/to_screen_converted/{}.bmp".format(filename))
-
-
-# img = Image.open('/home/pi/Photos/3ff.jpg')
-# im = convert(crop(resize(img)))
-# im = grayscale(crop(resize(img)))
-# print(im.size)
-# # im.save('/home/pi/img_convert/tmp/3ff.bmp')
