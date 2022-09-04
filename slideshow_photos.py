@@ -8,7 +8,7 @@ TO_SCREEN_PHOTOS_PATH="/home/pi/photos/to_screen"
 def get_display():
     print('Initializing EPD...')
 
-    display = AutoEPDDisplay(vcom=-2.28, spi_hz=24000000)
+    display = AutoEPDDisplay(vcom=-2.28, spi_hz=24000000, rotate='flip')
 
     print('VCOM set to', display.epd.get_vcom())
     return display
@@ -17,7 +17,7 @@ def push(img_path, display):
     print('Displaying "{}"...'.format(img_path))
 
     # clearing image to white
-    # display.frame_buf.paste(0xFF, box=(0, 0, display.width, display.height))
+    display.frame_buf.paste(0xFF, box=(0, 0, display.width, display.height))
 
     img = Image.open(img_path)
 
@@ -52,4 +52,4 @@ print_system_info(disp)
 images = glob.glob(TO_SCREEN_PHOTOS_PATH + "/*.bmp")
 for image in itertools.cycle(images):
     push(image, disp)
-    time.sleep(6) 
+    time.sleep(60) 

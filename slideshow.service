@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Photos Slideshow
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/pi/
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/myphotoframe/slideshow_photos.py
+
+[Install]
+WantedBy=multi-user.target

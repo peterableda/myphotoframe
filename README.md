@@ -8,6 +8,18 @@ NOTE: This is the second version, the original one was based on a slighly modifi
 I use the following python module to communicate with the e-paper device:
 https://github.com/GregDMeyer/IT8951
 
+# Enable auto-start
+
+```
+sudo cp ~/myphotoframe/slideshow.service /lib/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable slideshow.service
+```
+
+To check status run `systemctl status slideshow.service`.
+
+To temporarily stop the service (e.g., while developing) run `sudo systemctl stop slideshow.service` and then to restart `sudo systemctl start slideshow.service`.
+
 
 # Troubleshooting
 Make sure that SPI is enabled in `raspi-config`.
